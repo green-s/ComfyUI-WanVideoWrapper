@@ -115,6 +115,7 @@ def prepare_callback(model, steps, x0_output_dict=None):
 import server
 from threading import Thread
 import torch.nn.functional as F
+import sys
 import io
 import time
 import struct
@@ -127,7 +128,10 @@ class WrappedPreviewer(LatentPreviewer):
         self.last_time = 0
         self.c_index = 0
         self.rate = rate
-        self.swarmui_env = find_spec("SwarmComfyCommon") is not None
+        self.swarmui_env = (
+            find_spec("SwarmComfyCommon") is not None
+            or any("swarmui" in p.lower() for p in sys.path)
+        )
         if self.swarmui_env:
             print("previewer: SwarmUI output enabled")
         if hasattr(previewer, 'taesd'):
